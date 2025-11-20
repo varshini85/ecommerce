@@ -1,8 +1,8 @@
-"""create tables
+"""create_tables1
 
-Revision ID: c73257dc3335
-Revises: 1062c8151396
-Create Date: 2025-11-18 10:01:25.717698
+Revision ID: 24bf160e1994
+Revises: 40d594b9d46d
+Create Date: 2025-11-20 12:51:50.458465
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'c73257dc3335'
-down_revision: Union[str, Sequence[str], None] = '1062c8151396'
+revision: str = '24bf160e1994'
+down_revision: Union[str, Sequence[str], None] = '40d594b9d46d'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -55,6 +55,16 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_roles_id'), 'roles', ['id'], unique=False)
+    op.create_table('subscribers',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('email', sa.String(length=254), nullable=False),
+    sa.Column('subscribed', sa.Boolean(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_subscribers_email'), 'subscribers', ['email'], unique=True)
+    op.create_index(op.f('ix_subscribers_id'), 'subscribers', ['id'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -123,6 +133,9 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_users_phone'), table_name='users')
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_table('users')
+    op.drop_index(op.f('ix_subscribers_id'), table_name='subscribers')
+    op.drop_index(op.f('ix_subscribers_email'), table_name='subscribers')
+    op.drop_table('subscribers')
     op.drop_index(op.f('ix_roles_id'), table_name='roles')
     op.drop_table('roles')
     op.drop_index(op.f('ix_product_id'), table_name='product')

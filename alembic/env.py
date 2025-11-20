@@ -14,18 +14,19 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from model import Base 
-from model.user import User
-from model.cart_items import CartItem
-from model.orders import Order
-from model.product import Product
-from model.role import Role # or wherever your metadata is
-target_metadata = Base.metadata
-
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+from model import Base
+from model.user import User
+from model.subscription import Subscription
+from model.product import Product
+from model.cart_items import CartItem
+from model.orders import Order
+from model.role import Role
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
